@@ -7,3 +7,6 @@ yargs(hideBin(process.argv))
   .usage('$0 <cmd> [args]')
   .command(generateCommand)
   .help().argv;
+
+export * from "./ng-structure";
+export * from "./api-parser";

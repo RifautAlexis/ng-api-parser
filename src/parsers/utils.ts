@@ -1,8 +1,8 @@
-import cs from '../component-structure';
+import ngs from '../ng-structure';
 import ts from 'typescript';
 
-export function callExpressionParser(node: ts.CallExpression): cs.CallExpressionParsed {
-    let decoratorArguments: Array<cs.PropertyAssignmentParsed[]> = [];
+export function callExpressionParser(node: ts.CallExpression): ngs.CallExpressionParsed {
+    let decoratorArguments: Array<ngs.PropertyAssignmentParsed[]> = [];
     for (let argument of node.arguments) {
         if (ts.isObjectLiteralExpression(argument)) {
             const decoratorPropertie = objectLitteralExpressionParser(argument);
@@ -13,13 +13,13 @@ export function callExpressionParser(node: ts.CallExpression): cs.CallExpression
     }
 
     return {
-        name: leafParser(node.expression) as cs.DecoratorType,
+        name: leafParser(node.expression) as ngs.DecoratorType,
         values: decoratorArguments.length > 0 ? decoratorArguments : undefined,
     };
 }
 
-export function objectLitteralExpressionParser(node: ts.ObjectLiteralExpression): cs.PropertyAssignmentParsed[] | undefined {
-    const properties: cs.PropertyAssignmentParsed[] = [];
+export function objectLitteralExpressionParser(node: ts.ObjectLiteralExpression): ngs.PropertyAssignmentParsed[] | undefined {
+    const properties: ngs.PropertyAssignmentParsed[] = [];
     for (const property of node.properties) {
         if(ts.isPropertyAssignment(property)) {
             properties.push(propertyAssignmentParser(property));
@@ -28,7 +28,7 @@ export function objectLitteralExpressionParser(node: ts.ObjectLiteralExpression)
     return properties.length > 0 ? properties : undefined;
 }
 
-export function propertyAssignmentParser(node: ts.PropertyAssignment): cs.PropertyAssignmentParsed {
+export function propertyAssignmentParser(node: ts.PropertyAssignment): ngs.PropertyAssignmentParsed {
     return {
         name: leafParser(node.name) as string,
         value: leafParser(node.initializer),
@@ -95,19 +95,19 @@ export function leafParser(node: ts.Node): string | string[] | null | undefined 
   }
 }
 
-export function visibilityParser(modifiers?: ts.NodeArray<ts.ModifierLike>): cs.Visibility {
+export function visibilityParser(modifiers?: ts.NodeArray<ts.ModifierLike>): ngs.Visibility {
   if(modifiers === undefined){
-    return cs.Visibility.Public;
+    return ngs.Visibility.Public;
   }
   
   for (const modifier of modifiers) {
     if(modifier.kind === ts.SyntaxKind.PrivateKeyword) {
-      return cs.Visibility.Private;
+      return ngs.Visibility.Private;
     } else if(modifier.kind === ts.SyntaxKind.ProtectedKeyword) {
-      return cs.Visibility.Protected;
+      return ngs.Visibility.Protected;
     } else if(modifier.kind === ts.SyntaxKind.PublicKeyword) {
-      return cs.Visibility.Public;
+      return ngs.Visibility.Public;
     }
   }
-  return cs.Visibility.Public;
+  return ngs.Visibility.Public;
 }

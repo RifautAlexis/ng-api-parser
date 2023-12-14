@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import { normalize } from 'path';
 import ts from 'typescript';
 import { sourceFileParser } from './ast-parser';
-import cs from './component-structure';
+import ngs from './ng-structure';
 
 export class ApiParser {
   private readonly typescriptFilesParsableRegex = /^((?!index).)*\.ts$/gm;
@@ -18,9 +18,9 @@ export class ApiParser {
     this.init(paths);
   }
 
-  async parser(): Promise<cs.ComponentStructure[]> {
+  async parser(): Promise<ngs.ComponentStructure[]> {
 
-    let componentsStructure: cs.ComponentStructure[] = [];
+    let componentsStructure: ngs.ComponentStructure[] = [];
 
     for (const path of this.paths) {
       await this.popo(path);

@@ -1,10 +1,10 @@
-import cs from '../component-structure';
+import ngs from '../ng-structure';
 import ts from 'typescript';
 import { callExpressionParser, leafParser, visibilityParser } from './utils';
 
-export function classParser(classDeclaration: ts.ClassDeclaration, checker: ts.TypeChecker): cs.ComponentStructure {
-  const compStruct: cs.ComponentStructure = {
-    kind: cs.ContentKind.Class,
+export function classParser(classDeclaration: ts.ClassDeclaration, checker: ts.TypeChecker): ngs.ComponentStructure {
+  const compStruct: ngs.ComponentStructure = {
+    kind: ngs.ContentKind.Class,
     className: '',
     isExported: false,
     comment: commentParser(classDeclaration, checker),
@@ -43,13 +43,13 @@ export function classParser(classDeclaration: ts.ClassDeclaration, checker: ts.T
         if(decorator) {
           const propertyDecorator = decoratorParser(decorator);
           switch (propertyDecorator.kind) {
-            case cs.DecoratorType.Input:
+            case ngs.DecoratorType.Input:
               compStruct.inputDecorators = [...(compStruct.inputDecorators || []), {
                 ...decoratorParser(decorator),
                 ...propertyParsed,
               }];
               break;
-            case cs.DecoratorType.Output:
+            case ngs.DecoratorType.Output:
               compStruct.outputDecorators = [...(compStruct.outputDecorators || []), {
                 ...decoratorParser(decorator),
                 ...propertyParsed,
@@ -77,7 +77,7 @@ export function classParser(classDeclaration: ts.ClassDeclaration, checker: ts.T
   return compStruct;
 }
 
-function propertyDeclarationParser(node: ts.PropertyDeclaration, checker: ts.TypeChecker): cs.Property {
+function propertyDeclarationParser(node: ts.PropertyDeclaration, checker: ts.TypeChecker): ngs.Property {
   return {
     name: leafParser(node.name) as string,
     visibility: visibilityParser(node.modifiers),
@@ -100,11 +100,11 @@ function commentParser(node: ts.Node, checker: ts.TypeChecker): string | null {
   return null;
 }
 
-function decoratorParser(node: ts.Decorator): cs.Decorator {
+function decoratorParser(node: ts.Decorator): ngs.Decorator {
   if(ts.isCallExpression(node.expression)){
     let decoratorType = callExpressionParser(node.expression);
     return {
-      kind: cs.DecoratorType[decoratorType.name],
+      kind: ngs.DecoratorType[decoratorType.name],
       arguments: decoratorType.values,
     };
   }

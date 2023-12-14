@@ -1,4 +1,4 @@
-namespace cs {
+namespace ngs {
   export interface FileContent {
     imports?: string[];
     content?: Array<ComponentStructure | InterfaceStructure | EnumStructure | FunctionStructure>;
@@ -88,4 +88,4 @@ namespace cs {
   }
 }
 
-export default cs;
+export default ngs;

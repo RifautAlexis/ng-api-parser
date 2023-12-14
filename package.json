@@ -2,14 +2,21 @@
   "name": "ng-api-parser",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "repository": "https://github.com/RifautAlexis/ng-api-parser",
+  "homepage": "https://github.com/RifautAlexis/ng-api-parser#readme",
+  "author": {
+    "name": "Alexis",
+    "email": "ralexis149@gmail.com",
+    "url": "https://github.com/RifautAlexis"
+  },
   "scripts": {
-    "run": "ts-node cli/ng-api-parser.ts",
+    "build": "tsc",
     "dev:test": "npx ts-node .\\bin\\ng-api-parser.js generate --path=../../src/app/code-source",
     "parser:test": "npx ts-node .\\bin\\ng-api-parser.js generate --path=../../src/app/code-source/test",
     "parser:help": "npx ts-node .\\bin\\ng-api-parser.js generate --help"
   },
-  "author": "",
   "license": "MIT",
   "bin": {
     "ng-api-parser": "bin/ng-api-parser"

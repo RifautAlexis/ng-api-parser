@@ -1,9 +1,9 @@
-import cs from './component-structure';
+import ngs from './ng-structure';
 import ts from 'typescript';
 import { classParser } from './parsers/class-parser';
 
-export function sourceFileParser(sourceFile: ts.SourceFile, checker: ts.TypeChecker): cs.ComponentStructure {
-  let fileContent: Partial<cs.FileContent> = {};
+export function sourceFileParser(sourceFile: ts.SourceFile, checker: ts.TypeChecker): ngs.ComponentStructure {
+  let fileContent: Partial<ngs.FileContent> = {};
 
   sourceFile.forEachChild((child) => {
 
@@ -31,7 +31,7 @@ export function sourceFileParser(sourceFile: ts.SourceFile, checker: ts.TypeChec
   console.log(JSON.stringify(fileContent));
   console.log("================================");
   
-  return fileContent as cs.ComponentStructure;
+  return fileContent as ngs.ComponentStructure;
 }
 
 function importDeclarationParser(

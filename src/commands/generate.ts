@@ -1,5 +1,5 @@
 import { CommandModule } from 'yargs';
-import { ApiParser } from '../src/api-parser';
+import { ApiParser } from '../api-parser';
 import fs from "fs-extra";
 
 export const generateCommand: CommandModule = {
