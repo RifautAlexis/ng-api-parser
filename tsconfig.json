@@ -20,4 +20,5 @@
     "src",
     "bin"
   ],
+  "exclude": ["node_modules", "lib", "rollup.config.mjs"]
 }
