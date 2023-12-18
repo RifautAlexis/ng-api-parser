@@ -12,7 +12,7 @@
     "url": "https://github.com/RifautAlexis"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf lib && tsc && rollup -c rollup.config.mjs",
     "dev:test": "npx ts-node .\\bin\\ng-api-parser.js generate --path=../../src/app/code-source",
     "parser:test": "npx ts-node .\\bin\\ng-api-parser.js generate --path=../../src/app/code-source/test",
     "parser:help": "npx ts-node .\\bin\\ng-api-parser.js generate --help"
@@ -29,6 +29,12 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/yargs": "^17.0.29"
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@types/yargs": "^17.0.29",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.9.0",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "tslib": "^2.6.2"
   }
 }
