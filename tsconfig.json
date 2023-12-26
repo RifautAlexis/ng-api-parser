@@ -4,10 +4,11 @@
   "compilerOptions": {
     "outDir": "./lib",
     "alwaysStrict": true,
-    "rootDir": "src",
+    "strict": true,
+    "rootDir": "./src",
     "baseUrl": ".",
-    "target": "ES2018",
-    "module": "esnext",
+    "target": "es6",
+    "module": "commonjs",
     "moduleResolution": "node",
     "declaration": true,
     "declarationMap": true,
@@ -15,10 +16,10 @@
     "composite": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true
   },
   "include": [
-    "src",
-    "bin"
+    "src"
   ],
   "exclude": ["node_modules", "lib", "rollup.config.mjs"]
 }

@@ -7,9 +7,8 @@ import ngs from './ng-structure';
 export class ApiParser {
   private readonly typescriptFilesParsableRegex = /^((?!index).)*\.ts$/gm;
 
-  private program;
-  private sourceFiles: ts.SourceFile[];
-  private checker;
+  private program?: ts.Program = undefined;
+  private checker?: ts.TypeChecker = undefined;
   private readonly paths: string[];
   private typescriptFilePaths: string [] = []
 
@@ -27,10 +26,10 @@ export class ApiParser {
     }
 
     this.program = ts.createProgram(this.typescriptFilePaths, {});
-    this.sourceFiles = this.program.getSourceFiles();
+    const sourceFiles = this.program.getSourceFiles();
     this.checker = this.program.getTypeChecker();
 
-    for (const sourceFile of this.sourceFiles) {
+    for (const sourceFile of sourceFiles) {
       componentsStructure.push(sourceFileParser(sourceFile, this.checker));
     }
       

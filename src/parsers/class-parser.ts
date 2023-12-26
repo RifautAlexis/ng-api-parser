@@ -13,7 +13,10 @@ export function classParser(classDeclaration: ts.ClassDeclaration, checker: ts.T
   classDeclaration.forEachChild((node) => {
     switch (node.kind) {
       case ts.SyntaxKind.Decorator:
-        compStruct.classDecorators = [...(compStruct.classDecorators || []), decoratorParser(node as ts.Decorator)];
+        const decortor = decoratorParser(node as ts.Decorator);
+        if (decortor) {
+          compStruct.classDecorators = [...(compStruct.classDecorators || []), ];
+        }
         break;
       case ts.SyntaxKind.ExportKeyword:
         compStruct.isExported = true;
@@ -41,17 +44,17 @@ export function classParser(classDeclaration: ts.ClassDeclaration, checker: ts.T
         const decorator = property.modifiers?.find(modifier => ts.isDecorator(modifier)) as ts.Decorator | undefined;
         
         if(decorator) {
-          const propertyDecorator = decoratorParser(decorator);
+          const propertyDecorator = decoratorParser(decorator)!;
           switch (propertyDecorator.kind) {
             case ngs.DecoratorType.Input:
               compStruct.inputDecorators = [...(compStruct.inputDecorators || []), {
-                ...decoratorParser(decorator),
+                ...propertyDecorator,
                 ...propertyParsed,
               }];
               break;
             case ngs.DecoratorType.Output:
               compStruct.outputDecorators = [...(compStruct.outputDecorators || []), {
-                ...decoratorParser(decorator),
+                ...propertyDecorator,
                 ...propertyParsed,
               }];
               break;
@@ -83,12 +86,12 @@ function propertyDeclarationParser(node: ts.PropertyDeclaration, checker: ts.Typ
     visibility: visibilityParser(node.modifiers),
     comment: commentParser(node, checker),
     isOptional: node.questionToken !== undefined,
-    type: leafParser(node.type) as string,
-    defaultValue: leafParser(node.initializer),
+    type: leafParser(node.type!) as string,
+    defaultValue: leafParser(node.initializer!),
   };
 }
 
-function commentParser(node: ts.Node, checker: ts.TypeChecker): string | null {
+function commentParser(node: ts.Node, checker: ts.TypeChecker): string | undefined {
   if('name' in node) {
     const propertyName = node.name as ts.PropertyName;
     const symbol = checker.getSymbolAtLocation(propertyName);
@@ -97,10 +100,10 @@ function commentParser(node: ts.Node, checker: ts.TypeChecker): string | null {
     }
   }
   
-  return null;
+  return undefined;
 }
 
-function decoratorParser(node: ts.Decorator): ngs.Decorator {
+function decoratorParser(node: ts.Decorator): ngs.Decorator | undefined {
   if(ts.isCallExpression(node.expression)){
     let decoratorType = callExpressionParser(node.expression);
     return {
@@ -108,6 +111,8 @@ function decoratorParser(node: ts.Decorator): ngs.Decorator {
       arguments: decoratorType.values,
     };
   }
+
+  return undefined;
 }
 
 function heritageClauseParser(heritageClause: ts.HeritageClause): string[] {

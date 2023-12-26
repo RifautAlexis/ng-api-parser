@@ -2,7 +2,7 @@
   "name": "ng-api-parser",
   "version": "1.0.0",
   "description": "",
-  "main": "./lib/index.js",
+  "main": "./src/index.ts",
   "types": "./lib/index.d.ts",
   "repository": "https://github.com/RifautAlexis/ng-api-parser",
   "homepage": "https://github.com/RifautAlexis/ng-api-parser#readme",
@@ -13,19 +13,19 @@
   },
   "scripts": {
     "build": "rimraf lib && tsc && rollup -c rollup.config.mjs",
-    "dev:test": "npx ts-node .\\bin\\ng-api-parser.js generate --path=../../src/app/code-source",
-    "parser:test": "npx ts-node .\\bin\\ng-api-parser.js generate --path=../../src/app/code-source/test",
-    "parser:help": "npx ts-node .\\bin\\ng-api-parser.js generate --help"
+    "dev:test": "npx ts-node .\\src\\index.ts generate --path=../../src/app/code-source",
+    "parser:test": "npx ts-node .\\src\\index.ts generate --path=../../src/app/code-source/test",
+    "parser:help": "npx ts-node .\\src\\index.ts generate --help",
+    "greet:script": "npx ts-node .\\src\\index.ts greet --name Angular"
   },
   "license": "MIT",
   "bin": {
-    "ng-api-parser": "bin/ng-api-parser"
+    "ng-api-parser": "src/index.ts",
+    "greet": "node lib/index.js greet --name Angular"
   },
   "dependencies": {
     "@types/fs-extra": "^11.0.3",
     "fs-extra": "^11.1.1",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
@@ -33,9 +33,10 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/yargs": "^17.0.29",
     "rimraf": "^5.0.5",
-    "rollup": "^4.9.0",
-    "rollup-plugin-node-polyfills": "^0.2.1",
+    "rollup": "^4.9.1",
     "rollup-plugin-typescript2": "^0.36.0",
-    "tslib": "^2.6.2"
+    "tslib": "^2.6.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   }
 }

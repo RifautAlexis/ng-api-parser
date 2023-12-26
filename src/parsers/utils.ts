@@ -7,7 +7,10 @@ export function callExpressionParser(node: ts.CallExpression): ngs.CallExpressio
         if (ts.isObjectLiteralExpression(argument)) {
             const decoratorPropertie = objectLitteralExpressionParser(argument);
             if(decoratorPropertie !== undefined) {
-                decoratorArguments.push(objectLitteralExpressionParser(argument));
+              const objectLitteralExpression = objectLitteralExpressionParser(argument);
+              if (objectLitteralExpression) {
+                decoratorArguments.push(objectLitteralExpression);
+              }
             }
         }
     }
@@ -31,11 +34,11 @@ export function objectLitteralExpressionParser(node: ts.ObjectLiteralExpression)
 export function propertyAssignmentParser(node: ts.PropertyAssignment): ngs.PropertyAssignmentParsed {
     return {
         name: leafParser(node.name) as string,
-        value: leafParser(node.initializer),
+        value: leafParser(node.initializer)!,
     };
 }
 
-export function leafParser(node: ts.Node): string | string[] | null | undefined {
+export function leafParser(node: ts.Node): string | string[] | undefined {
   if(node === undefined) {
     return undefined;
   }
@@ -91,7 +94,7 @@ export function leafParser(node: ts.Node): string | string[] | null | undefined 
       return leafParser((node as ts.TypeReferenceNode).typeName);
 
     default:
-      return null;
+      return undefined;
   }
 }
 
