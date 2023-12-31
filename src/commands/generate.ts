@@ -26,11 +26,11 @@ export const generateCommand: CommandModule = {
     return yargs;
   },
   handler: async (argv: any) => {
-    console.log(argv['path'], argv['output']);
     const apiParser = new ApiParser([argv['path']]);
-    const parserResult = apiParser.parser();
 
-    const outputPath = argv['output'] || './';
-    fs.writeJson(outputPath, JSON.stringify(parserResult));
+    const parserResult = await apiParser.parser();
+
+    const outputPath = argv['output'] || './output.json';
+    await fs.writeJson(outputPath, parserResult, {spaces: 2});
   },
 };

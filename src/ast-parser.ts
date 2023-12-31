@@ -27,9 +27,6 @@ export function sourceFileParser(sourceFile: ts.SourceFile, checker: ts.TypeChec
         break;
     }
   });
-  console.log("================================");
-  console.log(JSON.stringify(fileContent));
-  console.log("================================");
   
   return fileContent as ngs.ComponentStructure;
 }

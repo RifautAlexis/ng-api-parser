@@ -2,24 +2,18 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "./lib",
-    "alwaysStrict": true,
+    "rootDir": "src",
+    "outDir": "lib",
     "strict": true,
-    "rootDir": "./src",
-    "baseUrl": ".",
     "target": "es6",
     "module": "commonjs",
+    "sourceMap": true,
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true,
-    "composite": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true
+    "declarationDir": "lib/types"
   },
-  "include": [
-    "src"
-  ],
-  "exclude": ["node_modules", "lib", "rollup.config.mjs"]
+  "include": ["src"],
+  "exclude": ["node_modules", "lib"]
 }

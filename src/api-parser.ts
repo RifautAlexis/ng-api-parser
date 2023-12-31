@@ -5,7 +5,7 @@ import { sourceFileParser } from './ast-parser';
 import ngs from './ng-structure';
 
 export class ApiParser {
-  private readonly typescriptFilesParsableRegex = /^((?!index).)*\.ts$/gm;
+  private readonly typescriptFilesParsableRegex = /^((?!index).)*\.ts$/;
 
   private program?: ts.Program = undefined;
   private checker?: ts.TypeChecker = undefined;
@@ -22,15 +22,15 @@ export class ApiParser {
     let componentsStructure: ngs.ComponentStructure[] = [];
 
     for (const path of this.paths) {
-      await this.popo(path);
+      await this.filterPath(path);
     }
 
     this.program = ts.createProgram(this.typescriptFilePaths, {});
-    const sourceFiles = this.program.getSourceFiles();
     this.checker = this.program.getTypeChecker();
 
-    for (const sourceFile of sourceFiles) {
-      componentsStructure.push(sourceFileParser(sourceFile, this.checker));
+    for (const path of this.typescriptFilePaths) {
+      const sourceFile = this.program.getSourceFile(path);
+      componentsStructure.push(sourceFileParser(sourceFile!, this.checker));
     }
       
     return componentsStructure;
@@ -44,7 +44,7 @@ export class ApiParser {
     }
   }
 
-  private async popo(path: string): Promise<void> {
+  private async filterPath(path: string): Promise<void> {
     try{
       const stats = await fs.promises.stat(path);
     
@@ -53,10 +53,10 @@ export class ApiParser {
       } else if (stats.isDirectory()) {
         const files = await fs.promises.readdir(path);
 
-        files.forEach((file) => {
+        for (const file of files) {
           const filePath = normalize(`${path}\\${file}`);
-          this.popo(filePath);
-        });
+          await this.filterPath(filePath);
+        }
       }
     } catch (err) {
       console.error('An error occurred:', err);
