@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "rimraf lib && tsc",
-    "parser:test": "npx ts-node .\\src\\index.ts generate --path ./test",
+    "parser:test": "npx ts-node .\\src\\index.ts generate -p src/**/* -e **/index.ts --pr -o ./zozo",
     "parser:help": "npx ts-node .\\src\\index.ts generate --help"
   },
   "license": "MIT",
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "fs-extra": "^11.1.1",
+    "glob": "^10.3.10",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
@@ -28,8 +29,8 @@
     "@types/node": "^20.10.5",
     "@types/yargs": "^17.0.29",
     "rimraf": "^5.0.5",
-    "tslib": "^2.6.2",
     "ts-node": "^10.9.1",
+    "tslib": "^2.6.2",
     "typescript": "^5.2.2"
   }
 }
