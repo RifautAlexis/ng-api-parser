@@ -10,7 +10,7 @@ export const generateCommand: CommandModule = {
   describe: "Generate a API documention",
   builder: (yargs) => {
     yargs.option("path", {
-      alias: "p",
+      alias: "P",
       describe: "path to the directory to analyze",
       demandOption: true,
       type: "string",
@@ -18,7 +18,7 @@ export const generateCommand: CommandModule = {
       string: true,
     });
     yargs.option("output", {
-      alias: "o",
+      alias: "O",
       describe: "path to write result in a file",
       demandOption: false,
       type: "string",
@@ -27,7 +27,7 @@ export const generateCommand: CommandModule = {
       string: true,
     });
     yargs.option("exclude", {
-      alias: "e",
+      alias: "E",
       describe: "exclude files to parse, based on one or more glob",
       demandOption: false,
       type: "string",
@@ -36,7 +36,7 @@ export const generateCommand: CommandModule = {
       array: true,
     });
     yargs.option("parentRelated", {
-      alias: "pr",
+      alias: "PR",
       describe: "exclude files to parse, based on one or more glob",
       demandOption: false,
       type: "boolean",
@@ -48,7 +48,7 @@ export const generateCommand: CommandModule = {
     return yargs;
   },
   handler: async (argv: any) => {
-    const paths: string[] = argv["path"];
+    const sourcePath: string = argv["path"];
     let output: string = argv["output"];
     const filesToExclude: string[] | undefined = argv["exclude"];
     const parentRelated: boolean = argv["parentRelated"];
@@ -61,21 +61,27 @@ export const generateCommand: CommandModule = {
       );
     }
 
-    const apiParser = new ApiParser();
+    let parserResults: ngs.ComponentStructure[] = [];
 
-    for (const filepath of getPaths(paths, filesToExclude)) {
-      const parserResults = apiParser.parser(filepath);
+    if (!parentRelated) {
+      for (const filepathFiltered of getPaths(sourcePath, filesToExclude)) {
+        const apiParser = new ApiParser();
+        parserResults.push(...apiParser.parser(filepathFiltered));
+      }
 
-      for (const parserResult of parserResults) {
+      const outputPath = output ?? "./output.json";
+      
+      await fs.outputJSON(outputPath, parserResults, { spaces: 2 });
 
-        if (parentRelated) {
-          const parentDirectory = path.basename(path.dirname(filepath));
+    } else {
+      for (const filepathFiltered of getPaths(sourcePath, filesToExclude)) {
+        const apiParser = new ApiParser();
+        parserResults = apiParser.parser(filepathFiltered);
+
+        for (const parserResult of parserResults) {
+          const parentDirectory = path.basename(path.dirname(filepathFiltered));
           const outputPathRoot: string = output ?? './output/';
-          const outputPath = path.join(outputPathRoot, parentDirectory, path.basename(filepath).replace(/.ts$/, '.json')); // `${outputpath}${parentDirectory}/${path.basename(filepath).replace(/.ts$/, '.json')}`
-          await fs.outputJSON(outputPath, parserResult, { spaces: 2 });
-          
-        } else {
-          const outputPath = output ?? "./output.json";
+          const outputPath = path.join(outputPathRoot, parentDirectory, path.basename(filepathFiltered).replace(/.ts$/, '.json')); // `${outputpath}${parentDirectory}/${path.basename(filepath).replace(/.ts$/, '.json')}`
           await fs.outputJSON(outputPath, parserResult, { spaces: 2 });
         }
       }
@@ -83,15 +89,21 @@ export const generateCommand: CommandModule = {
   },
 };
 
-const getPaths = (paths: string[], filesToExclude?: string[]): string[] => {
-  const glob = new Glob(paths, {
+const getPaths = (path: string, filesToExclude?: string[]): string[] => {
+  const typescriptFileRegex = /^.*\.ts$/;
+
+  const glob = new Glob(path, {
     ignore: filesToExclude,
     nodir: true,
   });
 
   const pathFiles: string[] = [];
   for (const file of glob) {
-    pathFiles.push(file);
+    if(typescriptFileRegex.test(file)){
+      pathFiles.push(file);
+    }
+    
   }
+
   return pathFiles;
 };
