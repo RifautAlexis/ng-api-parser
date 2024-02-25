@@ -54,10 +54,16 @@ export const generateCommand: CommandModule = {
     const parentRelated: boolean = argv["parentRelated"];
 
     const matchFileRegex = /(!?[\w-]+\..*)/m;
+    const matchJsonFileRegex = /(!?[\w-]+\.json)/m;
 
     if (parentRelated && !!output && matchFileRegex.test(output)) {
       throw new Error(
         "May not specify a file as an output path when parentRelated option is set to true"
+      );
+    }
+    if(!parentRelated && !!output && !matchJsonFileRegex.test(output)) {
+      throw new Error(
+        "The specified output value is not a file with .json extension "
       );
     }
 
@@ -81,7 +87,7 @@ export const generateCommand: CommandModule = {
         for (const parserResult of parserResults) {
           const parentDirectory = path.basename(path.dirname(filepathFiltered));
           const outputPathRoot: string = output ?? './output/';
-          const outputPath = path.join(outputPathRoot, parentDirectory, path.basename(filepathFiltered).replace(/.ts$/, '.json')); // `${outputpath}${parentDirectory}/${path.basename(filepath).replace(/.ts$/, '.json')}`
+          const outputPath = path.join(outputPathRoot, parentDirectory, path.basename(filepathFiltered).replace(/.ts$/, '.json'));
           await fs.outputJSON(outputPath, parserResult, { spaces: 2 });
         }
       }

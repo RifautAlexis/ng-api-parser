@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "rimraf lib && tsc",
-    "parser:test": "npx ts-node .\\src\\index.ts generate -P src/**/* -E **/index.ts --PR -O ./zozo",
+    "parser:test": "npx ts-node .\\src\\index.ts generate -P src/**/* -E **/index.ts -O ./zozo.json",
     "parser:help": "npx ts-node .\\src\\index.ts generate --help"
   },
   "license": "MIT",
